@@ -32,7 +32,7 @@ ngrok http 3035
 For example, to point Streem to the `https://abc123.ngrok.app/webhook-events` endpoint, you can run:
 
 ```bash
-curl -X POST -H "Content-Type: application/json" -d '{"url":"https://abc123.ngrok.app/webhook-events"}' -s  http://localhost:3035/webhooks
+curl -X POST -H "Content-Type: application/json" -d '{"url":"https://abc123.ngrok.app/webhook-events"}' -s  https://abc123.ngrok.app/webhooks
 ```
 
 ## Disclaimer
