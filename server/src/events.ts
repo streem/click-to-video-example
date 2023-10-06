@@ -64,7 +64,7 @@ export function streemEventsHandler (req: Request, res: Response) {
         return;
     }
 
-    const { event } = req.body;
+    const { event } = JSON.parse(req.body);
 
     if (event?.event_type === 'group_reservation_updated') {
         const updatedReservation = (event.payload as GroupReservationUpdated).updated_group_reservation;
