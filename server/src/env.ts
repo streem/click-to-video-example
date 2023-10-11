@@ -11,5 +11,6 @@ export const streemConfig = {
     apiRegion: process.env.STREEM_API_REGION || 'us',
     apiKeyId: process.env.STREEM_API_KEY_ID!,
     apiKeySecret: process.env.STREEM_API_KEY_SECRET!,
-    companyCode: process.env.STREEM_COMPANY_CODE!
+    companyCode: process.env.STREEM_COMPANY_CODE!,
+    signingKeySecret: process.env.STREEM_SIGNING_KEY_SECRET!
 }

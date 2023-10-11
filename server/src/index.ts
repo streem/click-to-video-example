@@ -3,6 +3,7 @@ import { serverConfig } from './env';
 import cors from 'cors';
 import routes from './routes';
 import { clientEventsHandler, streemEventsHandler } from './events';
+import { validateStreemSignature } from './streem/util';
 
 const app: Express = express();
 
@@ -19,7 +20,7 @@ app.get('/events/g/:groupName/r/:reservationSid', express.json(), clientEventsHa
 
 // Endpoint to receive and process Streem webhooks callbacks
 // Keep the raw body buffer for signature checks
-app.post("/webhook-events", express.raw({type: 'application/json'}), streemEventsHandler);
+app.post("/webhook-events", express.json({verify: validateStreemSignature}), streemEventsHandler);
 
 app.listen(serverConfig.port, async () => {
     console.log(`⚡️[server]: Server is running at http://localhost:${serverConfig.port}`);

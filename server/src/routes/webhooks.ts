@@ -4,8 +4,6 @@ import { streemConfig } from '../env';
 
 const router = express.Router();
 const streemApi = StreemApi.instance();
-// WARNING: use a secured store for signing keys in production. This is just for demo purposes.
-export const SIGNING_KEY_SECRET = 'ClickToVideo Example Signing Key Secret';
 
 router.get('/:webhookSid', async (req: Request, res: Response) => {
     const { webhookSid } = req.params;
@@ -26,7 +24,7 @@ router.post('/', async (req: Request, res: Response) => {
     );
     const signingKey: WebhookSigningKey = await streemApi.createWebhookSigningKey(
         webhook.sid,
-        SIGNING_KEY_SECRET,
+        streemConfig.signingKeySecret
     );
 
     res.json({ webhook, signingKey });

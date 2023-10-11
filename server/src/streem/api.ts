@@ -161,14 +161,14 @@ export default class StreemApi {
 
     async createWebhookSigningKey(
         webhookSid: string,
-        shared_secret: string,
+        sharedSecret: string,
     ): Promise<WebhookSigningKey> {
         const url = `${this.baseUrl}/v1/webhooks/${webhookSid}/signing-keys`;
         const res = await axios.post<{ signing_key: WebhookSigningKey }>(
             url,
             {
-                shared_secret: shared_secret,
-                label: 'Create By ClickToVideoExample',
+                shared_secret: sharedSecret,
+                label: 'Created By ClickToVideoExample',
             },
             { ...this.config }
         );

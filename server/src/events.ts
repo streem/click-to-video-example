@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 import { GroupReservation } from './streem/api';
 import StreemApi from './streem/api';
-import { validateWebhookRequest } from './streem/util';
 import { streemConfig } from './env';
 
 const streemApi = StreemApi.instance();
@@ -57,14 +56,13 @@ export async function clientEventsHandler (req: Request, res: Response) {
 
 // Streem webhooks handler
 export function streemEventsHandler (req: Request, res: Response) {
-    const isValid = validateWebhookRequest(req);
-    if (!isValid) {
+    if (!req.hasValidStreemSignature) {
         console.log('Invalid webhook request ', req.headers, req.body);
         res.status(401).end();
         return;
     }
 
-    const { event } = JSON.parse(req.body);
+    const { event } = req.body;
 
     if (event?.event_type === 'group_reservation_updated') {
         const updatedReservation = (event.payload as GroupReservationUpdated).updated_group_reservation;
