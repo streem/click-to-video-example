@@ -24,7 +24,7 @@ router.post('/', async (req: Request, res: Response) => {
     );
     const signingKey: WebhookSigningKey = await streemApi.createWebhookSigningKey(
         webhook.sid,
-        streemConfig.signingKeySecret
+        streemConfig.webhookSigningKey
     );
 
     res.json({ webhook, signingKey });

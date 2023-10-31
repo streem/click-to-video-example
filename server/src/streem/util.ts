@@ -9,7 +9,7 @@ declare module 'http' {
 }
 
 export function validateStreemSignature(req: IncomingMessage, res: ServerResponse, body: Buffer, encoding: string) {
-    const hmac = createHmac('sha256', streemConfig.signingKeySecret);
+    const hmac = createHmac('sha256', streemConfig.webhookSigningKey);
 
     // make sure the request is current
     const sentAt = req.headers['streem-sent-at'];
@@ -24,9 +24,11 @@ export function validateStreemSignature(req: IncomingMessage, res: ServerRespons
     const reqTimeSkew = Date.now() - sentAtDate
     const allowedSkew = 5000 // adjust timedelta (in ms) as desired
     if (reqTimeSkew > allowedSkew) {
-        return false; // request is too far in the past 
+        req.hasValidStreemSignature = false; // request is too far in the past
+        return; 
     } else if (reqTimeSkew < -allowedSkew) {
-        return false; // request is in the future
+        req.hasValidStreemSignature = false; // request is in the future
+        return;
     }
 
     // Combine the headers and the request body to calculate the signature input message
@@ -47,7 +49,11 @@ export function validateStreemSignature(req: IncomingMessage, res: ServerRespons
     const expectedSignature = hmac.digest('hex');
 
     // validate that one of the signatures in the request matches the expected signature
-    const signatures = (req.headers['streem-signature']! as string).split(',').map(s => s.trim());
+    const streemSignature = req.headers['streem-signature'];
+    if (typeof streemSignature !== 'string') {
+        throw new Error('"streem-signature" header not found in the request');
+    }
+    const signatures = streemSignature.split(',').map(s => s.trim());
     const matchedSignature = signatures.find(signature => timingSafeEqual(Buffer.from(signature), Buffer.from(expectedSignature)));
 
     req.hasValidStreemSignature = !!matchedSignature;

@@ -12,5 +12,5 @@ export const streemConfig = {
     apiKeyId: process.env.STREEM_API_KEY_ID!,
     apiKeySecret: process.env.STREEM_API_KEY_SECRET!,
     companyCode: process.env.STREEM_COMPANY_CODE!,
-    signingKeySecret: process.env.STREEM_SIGNING_KEY_SECRET!
+    webhookSigningKey: process.env.STREEM_WEBHOOK_SIGNING_KEY!
 }
