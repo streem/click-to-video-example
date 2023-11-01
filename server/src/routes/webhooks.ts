@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import StreemApi from '../streem/api';
+import StreemApi, { WebhookSigningKey } from '../streem/api';
 import { streemConfig } from '../env';
 
 const router = express.Router();
@@ -17,12 +17,17 @@ router.post('/', async (req: Request, res: Response) => {
     const webhook = await streemApi.createWebhook(
         company.sid,
         url,
-        "Click To Video Webhook",
+        "Click To Video Example Webhook",
         "POST",
         5000,
         5
     );
-    res.json(webhook);
+    const signingKey: WebhookSigningKey = await streemApi.createWebhookSigningKey(
+        webhook.sid,
+        streemConfig.webhookSigningKey
+    );
+
+    res.json({ webhook, signingKey });
 });
 
 router.delete('/:webhookSid', async (req: Request, res: Response) => {

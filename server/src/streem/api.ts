@@ -36,6 +36,18 @@ export interface Webhook {
     method: string;
 }
 
+export interface WebhookSigningKey {
+    sid: string;
+    webhook_sid: string;
+    shared_secret: string;
+    label: string;
+}
+
+export interface CreatedWebhook {
+    webhook: Webhook;
+    signing_key: WebhookSigningKey;
+}
+
 export default class StreemApi {
     private readonly baseUrl: string;
     private readonly config: Partial<AxiosRequestConfig>;
@@ -145,5 +157,21 @@ export default class StreemApi {
     ): Promise<void> {
         const url = `${this.baseUrl}/v1/webhooks/${webhookSid}`;
         await axios.delete(url, { ...this.config });
+    }
+
+    async createWebhookSigningKey(
+        webhookSid: string,
+        sharedSecret: string,
+    ): Promise<WebhookSigningKey> {
+        const url = `${this.baseUrl}/v1/webhooks/${webhookSid}/signing-keys`;
+        const res = await axios.post<{ signing_key: WebhookSigningKey }>(
+            url,
+            {
+                shared_secret: sharedSecret,
+                label: 'Created By ClickToVideoExample',
+            },
+            { ...this.config }
+        );
+        return res.data.signing_key;
     }
 }

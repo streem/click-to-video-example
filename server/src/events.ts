@@ -56,6 +56,12 @@ export async function clientEventsHandler (req: Request, res: Response) {
 
 // Streem webhooks handler
 export function streemEventsHandler (req: Request, res: Response) {
+    if (!req.hasValidStreemSignature) {
+        console.log('Invalid webhook request ', req.headers, req.body);
+        res.status(401).end();
+        return;
+    }
+
     const { event } = req.body;
 
     if (event?.event_type === 'group_reservation_updated') {
